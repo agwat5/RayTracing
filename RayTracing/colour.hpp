@@ -5,6 +5,6 @@
 #include <iostream>
 
 
-using colour = vec3;
+using Colour = vec3;
 
-void write_colour(std::ostream& out, const colour& pixel_colour);
+void write_colour(std::ostream& out, const Colour& pixel_colour);
