@@ -1,6 +1,10 @@
 #include "camera.hpp"
 
 
+vec3 randomOffset(void) {
+    return vec3(random_double(-0.5, 0.5), random_double(-0.5, 0.5), 0);
+
+}
 
 void Camera::render(const Hittable& world) {
     initialize();
@@ -8,10 +12,11 @@ void Camera::render(const Hittable& world) {
     for (int j = 0; j < imageHeight; j++) {
         std::clog << "\rScanlines remaining: " << (imageHeight - j) << std::flush;
         for (int i = 0; i < imageWidth; i++) {
-            point3 sensor_ij = sensor_00 + (i * pixelDelta_u) + (j * pixelDelta_v);
-            vec3 to_ij = sensor_ij - cameraPin;
-            Ray r(cameraPin, to_ij);
-            write_colour(std::cout, rayColour(r, world));
+            auto colour = Colour();
+            for (int sample = 0; sample < samplesPerPixel; sample++) {
+                colour += rayColour(getRay(i, j), world);
+            }
+            write_colour(std::cout, (1.0/samplesPerPixel)*colour);
         }
     }
     std::clog << "\rDone.                   \n";
@@ -32,6 +37,14 @@ void Camera::initialize() {
     sensor_00 = sensorOrigin + (pixelDelta_u + pixelDelta_u) / 2.0;
 
 }
+
+Ray Camera::getRay(int i, int j) const {
+    auto offset = randomOffset();
+    point3 sensor_ij = sensor_00 + ((i + offset.x())*pixelDelta_u + (j + offset.y()) * pixelDelta_v);
+    vec3 to_ij = sensor_ij - cameraPin;
+    return Ray(cameraPin, to_ij);
+}
+
 
 Colour Camera::rayColour(const Ray& r, const Hittable& world) const {
 

@@ -2,6 +2,7 @@
 
 #include "hittable.hpp"
 #include "colour.hpp"
+#include "common.hpp"
 
 class Camera {
 
@@ -14,6 +15,8 @@ public:
 	double aspectRatio;
 	double focalLength;
 	double sensorHeight;
+	int samplesPerPixel = 10;   // Count of random samples for each pixel
+
 
 
 private:
@@ -28,6 +31,8 @@ private:
 	void initialize();
 
 	Colour rayColour(const Ray& r, const Hittable& world) const;
+
+	Ray getRay(int i, int j) const;
 
 
 

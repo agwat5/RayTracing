@@ -16,6 +16,7 @@ int main()
     camera.aspectRatio = 16.0 / 9.0;
     camera.focalLength = 1.0;
     camera.sensorHeight = 2.0;
+    camera.samplesPerPixel = 100;
  
     // world definition
     HittableList world;
