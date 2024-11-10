@@ -36,7 +36,7 @@ inline double random_double(double min, double max) {
 
 // Common Headers
 
-#include "ray.hpp"
-#include "vec3.hpp"
-#include "colour.hpp"
-#include "interval.hpp"
+//#include "ray.hpp"
+//#include "vec3.hpp"
+//#include "colour.hpp"
+//#include "interval.hpp"

@@ -17,6 +17,7 @@ int main()
     camera.focalLength = 1.0;
     camera.sensorHeight = 2.0;
     camera.samplesPerPixel = 100;
+    camera.maxDepth = 50;
  
     // world definition
     HittableList world;

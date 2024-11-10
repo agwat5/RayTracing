@@ -14,7 +14,7 @@ void Camera::render(const Hittable& world) {
         for (int i = 0; i < imageWidth; i++) {
             auto colour = Colour();
             for (int sample = 0; sample < samplesPerPixel; sample++) {
-                colour += rayColour(getRay(i, j), world);
+                colour += rayColour(getRay(i, j), maxDepth, world);
             }
             write_colour(std::cout, (1.0/samplesPerPixel)*colour);
         }
@@ -46,12 +46,17 @@ Ray Camera::getRay(int i, int j) const {
 }
 
 
-Colour Camera::rayColour(const Ray& r, const Hittable& world) const {
+Colour Camera::rayColour(const Ray& r, int rayHitLives, const Hittable& world) const {
+
+    if (rayHitLives <= 0) {
+        return Colour(0, 0, 0);
+    }
 
     HitRecord rec;
     Interval interval(0, infinity);
     if (world.isHit(r, interval, rec)) {
-        return 0.5 * (rec.normal + Colour(1, 1, 1));
+        auto direction = randomOnHemisphere(rec.normal);
+        return 0.5 * rayColour(Ray(rec.hitPoint, direction), rayHitLives-1, world);
     }
     vec3 unit_direction = calculateUnitVector(r.direction());
     auto a = 0.5 * (unit_direction.y() + 1.0);

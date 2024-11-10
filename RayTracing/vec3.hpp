@@ -1,8 +1,11 @@
 #pragma once
 
 // class taken from https://raytracing.github.io/books/RayTracingInOneWeekend.html
+
+#include "common.hpp"
 #include <cmath>
 #include <iostream>
+
 
 class vec3 {
 
@@ -47,6 +50,12 @@ public:
 		return e[0] * e[0] + e[1] * e[1] + e[2] * e[2];
 	}
 
+	static vec3 random() {
+		return vec3(random_double(), random_double(), random_double());
+	}
+	static vec3 random(double min, double max) {
+		return vec3(random_double(min, max), random_double(min, max), random_double(min, max));
+	}
 };
 
 // point3 is just an alias for vec3, but useful for geometric clarity in the code.
@@ -79,4 +88,21 @@ inline vec3 calculateUnitVector(const vec3& vector) {
 
 inline auto dotProduct(const vec3& vector, const vec3& vector2) {
 	return vector.e[0] * vector2.e[0] + vector.e[1] * vector2.e[1] + vector.e[2] * vector2.e[2];
+}
+
+inline vec3 randomUnitVector() {
+	while (true) {
+		auto p = vec3::random(-1, 1);
+		auto lensq = p.length_squared();
+		if (1e-160 < lensq && lensq <= 1)
+			return p / sqrt(lensq);
+	}
+}
+
+inline vec3 randomOnHemisphere(const vec3& normal) {
+	vec3 onUnitSphere = randomUnitVector();
+	if (dotProduct(onUnitSphere, normal) > 0.0) // In the same hemisphere as the normal
+		return onUnitSphere;
+	else
+		return -onUnitSphere;
 }

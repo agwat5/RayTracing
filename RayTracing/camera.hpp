@@ -2,7 +2,7 @@
 
 #include "hittable.hpp"
 #include "colour.hpp"
-#include "common.hpp"
+#include "ray.hpp"
 
 class Camera {
 
@@ -11,11 +11,12 @@ public:
 
 	void render(const Hittable& world);
 
-	int imageWidth;
-	double aspectRatio;
-	double focalLength;
-	double sensorHeight;
+	int imageWidth = 100; // rendered image width
+	double aspectRatio = 16.0/9; // rendered image aspect ratio
+	double focalLength = 1; // focal length of camera
+	double sensorHeight = 10;
 	int samplesPerPixel = 10;   // Count of random samples for each pixel
+	int maxDepth = 10; // maximum number of ray bounces into scene
 
 
 
@@ -30,7 +31,7 @@ private:
 
 	void initialize();
 
-	Colour rayColour(const Ray& r, const Hittable& world) const;
+	Colour rayColour(const Ray& r, int rayHitLives, const Hittable& world) const;
 
 	Ray getRay(int i, int j) const;
 
